@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>WTF is Diffie-Hellman | cxzaqwed</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="WTF is Diffie-Hellman" />
+<meta name="author" content="cxzaqwed" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Uma rápida explicação sobre Diffie-Hellman" />
+<meta property="og:description" content="Uma rápida explicação sobre Diffie-Hellman" />
+<link rel="canonical" href="https://cxzaqwed.github.io/2019/01/19/Diffie-Hellman.html" />
+<meta property="og:url" content="https://cxzaqwed.github.io/2019/01/19/Diffie-Hellman.html" />
+<meta property="og:site_name" content="cxzaqwed" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-01-19T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="WTF is Diffie-Hellman" />
+<script type="application/ld+json">
+{"description":"Uma rápida explicação sobre Diffie-Hellman","@type":"BlogPosting","url":"https://cxzaqwed.github.io/2019/01/19/Diffie-Hellman.html","headline":"WTF is Diffie-Hellman","dateModified":"2019-01-19T00:00:00+00:00","datePublished":"2019-01-19T00:00:00+00:00","author":{"@type":"Person","name":"cxzaqwed"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://cxzaqwed.github.io/2019/01/19/Diffie-Hellman.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://cxzaqwed.github.io/feed.xml" title="cxzaqwed" /></head>
+<body><div class="site-header">
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">cxzaqwed<b class="command_prompt"></b><b class="blinking_cursor">_</b></a>
+    <span class="social_links">
+        <a class="color-cyan-hover" href="https://twitter.com/cxzaqwed22"><i class="fab fa-twitter-square"></i></a><a class="color-purple-hover" href="https://www.twitch.tv/cxzaqwed22"><i class="fab fa-twitch"></i></a><a class="color-yellow-hover" href="https://github.com/cxzaqwed"><i class="fab fa-github-square"></i></a><a class="color-yellow-hover" href="https://steamcommunity.com/id/cxzaqwed/"><i class="fab fa-steam"></i></a><a class="color-yellow-hover" href="https://www.linkedin.com/in/cxzaqwed/"><i class="fab fa-linkedin"></i></a>
+    </span>
+  </div>
+</div>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+  <div class="author-box">
+    
+    
+        <img src="
+            https://gravatar.com/avatar/ade2075a0f532ca29704d6907e7bb629?s=256
+        " class="author-avatar" alt="Avatar" />
+    
+I like to know how everything works on this simulation called "life". I test, explore, create, and everything else that Science help us to do.
+
+</div>
+
+
+<div class="post">
+  <h1 class="post-title">WTF is Diffie-Hellman</h1>
+  
+  <div class="post-tags">
+      
+      <a class="tag" href="/tag/crypto/">crypto</a>
+      
+      <a class="tag" href="/tag/EN/">EN</a>
+      
+  </div>
+  
+  <div class="post-date">Published on 19 Jan 2019</div>
+  
+  <div class="post-description">Uma rápida explicação sobre Diffie-Hellman</div>
+  
+  <h1 id="wtf-is-diffie-hellman">WTF is Diffie-Hellman</h1>
+
+<p>Antes de partirmos para o assunto propriamente dito, é importante entendermos alguns conceitos básicos da criptografia.</p>
+
+<h3 id="1-criptografia">1. Criptografia</h3>
+<p>Para nos comunicarmos com alguém na Internet de forma privada, podemos fazer uso de várias formas de proteger a informação que queremos enviar para a outra pessoa: Podemos criar um idioma que só as pessoas envolvidas conhecem, procurar meios não-convencionais de troca de informações… Ou também podemos criptografar a informação, e essa última que será nosso foco.
+Para criptografar um dado, precisamos fazer uso de uma Chave Criptográfica. Essa Chave é responsável, através da Encriptação, de tornar nosso texto legível(plaintext) em ilegível(ciphertext).
+OBS1: Na Criptografia Simétrica, a mesma Chave Criptográfica é utilizada para Criptografar e Descriptografar. Diferente da Criptografia Assimétrica, onde existe uma Chave Criptográfica Pública e uma Privada, para garantir a confidencialidade da informação.</p>
+
+<h3 id="2-funcionamento-da-criptografia-simétrica">2. Funcionamento da Criptografia Simétrica</h3>
+<p>Imaginemos o seguinte exemplo: Precisamos passar as coordenadas do ponto de resgate para um Oficial da nossa tropa, sabendo que o inimigo tem acesso ao nossos meios de comunicação.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">from</span> <span class="nn">Crypto.Cipher</span> <span class="kn">import</span> <span class="n">AES</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">AES</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="s">'chave secreta 42'</span><span class="p">,</span> <span class="n">AES</span><span class="p">.</span><span class="n">MODE_CBC</span><span class="p">,</span> <span class="s">'This is an IV456'</span><span class="p">)</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="s">"Bletchley Park Memorial 15 horas"</span>
+<span class="n">ciphertext</span> <span class="o">=</span> <span class="n">obj</span><span class="p">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+<span class="n">encoded64</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>A saída será</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nh01bshgzGhL2L3nnwoessDciilkS6d95tr6D1Nl45c=
+</code></pre></div></div>
+
+<p>Agora, o problema da Chave Simétrica:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Cap.Martins: Tenente Nunes, na escuta?
+-Ten.Nunes: Na escuta, pode falar.
+-Cap.Martins: Parabéns pela missão, estarei enviando as coordenadas para seu resgate.
+-Ten.Nunes: Entendido.
+-Cap.Martins: nh01bshgzGhL2L3nnwoessDciilkS6d95tr6D1Nl45c=
+-Ten.Nunes: Recebido! Agora preciso da chave pra descriptografar a informação.
+-Cap.Martins: Vish...
+</code></pre></div></div>
+<p>A informação só pode ser decifrada se a chave utilizada na Encriptação (“chave secreta 42”) também for enviada para a outra pessoa, mas nesse caso não temos um meio seguro de enviar essa chave. O Exército Inimigo já tem acesso à mensagem encriptada, se tiverem acesso à chave também, provavelmente vão decifrar a mensagem e chegar no local antes do Tenente. 
+E agora?</p>
+
+<h2 id="diffie-hellman-101">Diffie-Hellman 101</h2>
+<p>Graças a nossa querida Matemática, podemos fazer uso de Logaritmos Discretos para gerarmos resultados iguais com cálculos diferentes, de forma que os observadores que não estejam envolvidos no cálculo, não consigam de imediato a resposta, mesmo possuindo uma parte das variáveis que foram utilizadas. Dividirei esse tópico em duas partes para facilitar o entendimento, a primeira explicando a teoria matemática e a segunda mostrando a implementação.</p>
+
+<h3 id="teoria-por-trás-do-método-diffie-hellman">Teoria por trás do Método Diffie-Hellman</h3>
+<p>O funcionamento desse método, é uma combinação de <strong>Aritmética Modular</strong>, <strong>Logaritmo Discreto</strong>, <strong>Números Primos</strong> e da <strong>Função de Euler</strong>, pois fornecem uma função numérica que é “fácil” de ser calculada, mas difícil de ser revertida a partir do resultado obtido e possuem uma distribuição uniforme de resultados.</p>
+
+<ol>
+  <li>A <strong>Aritmética Modular</strong> é um sistema matemático aplicável aos números inteiros, em que a contagem do valor decresce quando atinge um certo valor, chamado de <em>Módulo</em>.
+Um Exemplo facilmente encontrado na internet, é o do Relógio de ponteiro que temos em casa:</li>
+</ol>
+
+<blockquote>
+  <p>se o relógio começa em 12:00 (meio dia) e 22 horas passam, então o resultado será 10:00 do dia seguinte, e não 34:00. Como o número de horas começa de novo depois que atinge 12, esta aritmética é chamada aritmética módulo 12.</p>
+</blockquote>
+
+<ol>
+  <li>Os <strong>Logaritmos Discretos</strong> são utilizados de forma parecida com os Logaritmos comuns, são cálculos aplicados de forma objetiva, em um conjunto numérico específico. Por Exemplo:</li>
+</ol>
+
+<blockquote>
+  <p>Imaginemos que G é um grupo cíclico(gerado a partir de um único elemento), finito e com <em>n</em> elementos. 
+ Assumimos que este grupo está escrito multiplicativamente a partir de um gerador. 
+ Seja <em>b</em> um <a href="https://pt.wikipedia.org/wiki/Conjunto_gerador_de_um_grupo" title="Conjunto gerador de um grupo">gerador</a> de <em>G</em>; então todo elemento <em>g</em> de <em>G</em> pode ser escrito na forma <em>g</em> = <em>b^k^</em> para algum inteiro <em>k</em>. Além disso, quaisquer dois inteiros <em>k1</em> e <em>k2</em> representando <em>g</em> serão <a href="https://pt.wikipedia.org/wiki/Congru%C3%AAncia_(%C3%A1lgebra)">congruentes</a> ao módulo <em>n</em>.</p>
+</blockquote>
+
+<ol>
+  <li>
+    <p>Os <strong>Números Primos</strong> são números específicos, que são divisíveis somente por 1 e por eles mesmos. São eles que garantem uma distribuição uniforme dos possíveis resultados de cálculo quando são utilizados como <em>Módulo</em>.</p>
+  </li>
+  <li>
+    <p>A <strong>Função de Euler</strong> <strong><em>Φ (n)</em></strong> Representa o número de inteiros positivos menores que <em>n</em>, que são relativamente primos com <em>n</em>.</p>
+  </li>
+</ol>
+
+<p>Sabendo dessas características, podemos construir a Função de Diffie-Hellman da seguinte forma:</p>
+<ol>
+  <li>Capitão Martins e Tenente Nunes concordam em utilizar por exemplo, o <em>Módulo</em> <em>p</em> = 23 e a base <em>g</em> = 5 (que é uma raiz primitiva do modulo 23).</li>
+  <li>Capitão Martins escolhe como segredo o valor <em><strong>a</strong></em> = 4, e envia ao Tenente Nunes o resultado do cálculo <em>A</em> =  <em>g^a</em> mod <em>p</em>:
+    <ul>
+      <li><em>A</em> = 5^4^ mod 23 = 4</li>
+    </ul>
+  </li>
+  <li>Tenente Nunes escolhe o número secreto <em><strong>b</strong></em> = 3, e envia para o Capitão Martins o resultado de <em>B</em> = <em>g^b^</em> mod <em>p</em>:
+    <ul>
+      <li><em>B</em> = 5^3^ mod 23 = 10</li>
+    </ul>
+  </li>
+  <li>Capitão Martins faz o cálculo de <em><strong>s</strong></em> = <em>B^a^</em> mod <em>p</em>:
+    <ul>
+      <li><em><strong>s</strong></em> = 10^4^ mod 23 = 18</li>
+    </ul>
+  </li>
+  <li>Tenente Nunes calcula o valor de <em><strong>s</strong></em> = <em>A^b</em> mod <em>p</em>:
+    <ul>
+      <li><em><strong>s</strong></em> = 4^3^ mod 23 = 18</li>
+    </ul>
+  </li>
+</ol>
+
+<p>O Capitão Martins e o Tenente Nunes chegaram no mesmo resultado, e que somente eles sabem, o número 18.
+Isso acontece, pois quando as características de construção do algoritmo são respeitadas, elas resultam na seguinte propriedade:</p>
+
+<p>A^b^ <em>mod</em> p = g^ab^ <em>mod</em> p = g^ba^ <em>mod</em> p = B^a^ <em>mod</em> p</p>
+
+<p><strong>OBS 1</strong>: valores maiores nas variáveis <em>a</em>, <em>b</em> e <em>p</em> são fundamentais para fazer com que o algorítmo se torne mais seguro. Utilizando esses valores do exemplo, o Inimigo infiltrado na conversa só precisaria calcular <strong><em>n</em> mod 23</strong>, e esse calculo só tem 23 possíveis resultados, permitindo que o número secreto seja facilmente encontrado com um <em>bruteforce</em>.</p>
+
+<p><strong>OBS 2</strong>:  O inimigo teve acesso a quase todos os valores do cálculo, exceto às variáveis escolhidas secretamente pelos dois militares. É manter <em>a</em> e <em>b</em> em segredo, que garante que o inimigo terá trabalho pra fazer caso queira descobrir a chave secreta.</p>
+
+<h3 id="exemplo-de-implementação">Exemplo de implementação</h3>
+<p>Melhor do que apenas implementar o código, deixarei esse <a href="https://asecuritysite.com/encryption/diffie_py">site</a> que foi fundamental para que eu compreendesse o assunto. Nele é possível inclusive testar resultados com diferentes números. Recomendo que brinquem nele pra entender de verdade o conteúdo.</p>
+
+<h2 id="conclusão">Conclusão</h2>
+<p>Pra você que leu até aqui, deixo meu agradecimento e a continuação da história de resgate do nosso oficial utilizando Diffie-Hellman para a troca de chaves.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+-Ten.Nunes: Capitão, estou aguardando a chave..
+-Cap.Martins: Nosso inimigo também. Vamos estabelecer uma chave através do método Diffie-Hellman, conhece?
+-Ten.Nunes: Afirmativo.
+-Cap.Martins: utilizaremos o gerador 163 e o valor primo 100699.
+-Ten.Nunes: Entendido! Agora preciso do resultado do seu cálculo, Capitão.
+-Cap.Martins: 97024
+-Ten.Nunes: Recebido. O meu foi 11255.
+-Cap.Martins: Certo. Te enviarei as coordenadas criptografadas utilizando a chave gerada pelo resultado 
+do nosso cálculo, que é secreto, mas que devem ter dado o mesmo valor.
+Ten.Nunes: Entendido!
+...
+</code></pre></div></div>
+<p>Em Segredo, Capitão Martins escolheu o número 700, para gerar o valor que enviou ao Tenente. Assim também o Tenente o fez, mas com o número 1337.
+Ambos os cálculos resultaram no valor secreto 51053, que foi utilizado para gerar chaves iguais para os dois militares.
+O inimigo nunca descobriu a coordenada, e nem uma forma eficiente de fazer a tempo um <em>bruteforce</em> de <strong>n mod 100699</strong>  nos valores que os militares trocaram. O Tenente foi resgatado e a missão concluída com sucesso(enquanto você aprendia umas coisas legais :D).</p>
+<h3 id="referências">Referências</h3>
+<ol>
+  <li>http://matematicadainformacao.blogspot.com/2010/09/criptografia-logaritmo-discreto.html</li>
+  <li>https://pt.khanacademy.org/computing/computer-science/cryptography/modern-crypt/v/diffie-hellman-key-exchange-part-2</li>
+  <li>https://lume.ufrgs.br/handle/10183/118185</li>
+  <li>https://www.ime.usp.br/~rt/crPrimosRSA.prn.pdf</li>
+  <li>https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange</li>
+  <li>https://null-byte.wonderhowto.com/how-to/generate-private-encryption-keys-with-diffie-hellman-key-exchange-0180269/</li>
+</ol>
+
+</div>
+
+
+
+
+
+<div class="related">
+  <h2>related posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2020/10/20/story-about-me.html">
+            A short story about me
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+  
+  <h2>all tags</h2>
+  <div class="tag-cloud"><a href="/tag/en/" class="set-5">EN</a> <a href="/tag/crypto/" class="set-1">crypto</a> <a href="/tag/story/" class="set-1">story</a></div>
+  
+
+
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="credits"><a href="https://github.com/bitbrain/jekyll-dash">dash</a> theme for Jekyll by <a href="https://github.com/bitbrain">bitbrain</a> made with <i class="fas fa-heart"></i><div class="toggleWrapper">
+    <input type="checkbox" class="dn" id="theme-toggle" onclick="modeSwitcher()" checked />
+    <label for="theme-toggle" class="toggle">
+    <span class="toggle__handler">
+      <span class="crater crater--1"></span>
+      <span class="crater crater--2"></span>
+      <span class="crater crater--3"></span>
+    </span>
+        <span class="star star--1"></span>
+        <span class="star star--2"></span>
+        <span class="star star--3"></span>
+        <span class="star star--4"></span>
+        <span class="star star--5"></span>
+        <span class="star star--6"></span>
+    </label>
+</div>
+<script type="text/javascript">
+const theme = localStorage.getItem('theme');
+
+if (theme === "light") {
+    document.documentElement.setAttribute('data-theme', 'light');
+} else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+}
+const userPrefers = getComputedStyle(document.documentElement).getPropertyValue('content');
+
+function activateDarkTheme() {
+    document.getElementById('theme-toggle').checked = true;
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.add('theme--dark');
+    document.documentElement.classList.remove('theme--light');
+	document.getElementById("theme-toggle").className = 'light';
+	window.localStorage.setItem('theme', 'dark');
+}
+
+function activateLightTheme() {
+    document.getElementById('theme-toggle').checked = false;
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.add('theme--light');
+    document.documentElement.classList.remove('theme--dark');
+	document.getElementById("theme-toggle").className = 'dark';
+	window.localStorage.setItem('theme', 'light');
+}
+
+if (theme === "dark") {
+    activateDarkTheme();
+} else if (theme === "light") {
+    activateLightTheme();
+} else if  (userPrefers === "light") {
+    activateDarkTheme();
+} else {
+    activateDarkTheme();
+}
+
+function modeSwitcher() {
+	let currentMode = document.documentElement.getAttribute('data-theme');
+	if (currentMode === "dark") {
+	    activateLightTheme();
+	} else {
+	    activateDarkTheme();
+	}
+}
+</script></div>
+  </div>
+</footer>
+
+
+<script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+  </body>
+
+</html>
